@@ -1,0 +1,14 @@
+ffmpeg==1.4
+gcloud==0.18.3
+google==3.0.0
+google-api-core==2.11.1
+google-auth==2.22.0
+google-cloud-core==2.3.3
+google-cloud-speech==2.21.0
+google-cloud-storage==2.10.0
+google-crc32c==1.5.0
+google-resumable-media==2.5.0
+googleapis-common-protos==1.60.0
+protobuf==4.24.2
+pydub==0.25.1
+pytube==15.0.0

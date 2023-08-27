@@ -1,7 +1,9 @@
 /audio
 /texts
 creds.json
-*.txt
+polish.txt
+french.txt
+links.txt
 *.mp4
 *.mp3
 __pycache__
