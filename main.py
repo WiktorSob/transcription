@@ -1,4 +1,4 @@
-from concurrent.futures import ProcessPoolExecutor
+import argparse
 
 from google.cloud import storage
 from google.cloud import speech
@@ -28,8 +28,28 @@ def transcribe_link(link, audio_language):
         f.write(transcription)
 
 if __name__ == '__main__':
-    link = 'https://www.youtube.com/watch?v=3HZYb237m2k&ab_channel=MarcinNajmanOfficial'
-    transcribe_link(link, 'pl-PL')
+    parser = argparse.ArgumentParser(description="Transcribe youtube video directly from link")
+    parser.add_argument("-f",
+                        "--file",
+                        type = str,
+                        help = 'Path to file with youtube links')
+    parser.add_argument("-l",
+                        "--language",
+                        type = str,
+                        help = 'Language code for audio transcription')
+    args = parser.parse_args()
+    
+    links_file = args.file
+    language_code = args.language
+    
+    with open (links_file, 'r') as f:
+        for line in f.readlines():
+            link = line
+            transcribe_link(link, language_code)
+        
+    
+    # link = 'https://www.youtube.com/watch?v=3HZYb237m2k&ab_channel=MarcinNajmanOfficial'
+    # transcribe_link(link, 'pl-PL')
     # path = 'audio/transcript-test.mp3'
     # upload_blob(bucket_name='transcription-storage-witek',
     #                 source_file_name=path,

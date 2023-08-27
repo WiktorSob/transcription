@@ -1,7 +1,9 @@
 /audio
 /texts
 creds.json
-links.txt
+*.txt
 *.mp4
+*.mp3
 __pycache__
 .DS_Store
+*.ipynb

@@ -68,7 +68,8 @@ def transcribe_gcs(gcs_uri: str, language_code: str) -> str:
     audio = speech.RecognitionAudio(uri=gcs_uri)
     config = speech.RecognitionConfig(
         sample_rate_hertz=44100,
-        language_code=language_code
+        language_code=language_code,
+        enable_automatic_punctuation=True
     )
 
     operation = client.long_running_recognize(config=config, audio=audio)
