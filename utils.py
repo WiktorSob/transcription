@@ -6,10 +6,10 @@ from google.cloud import speech
 from google.api_core.exceptions import PreconditionFailed
 
 
-BASE_URI = 'gs://transcription-storage-witek/input/'
+
 
 # converts youtube video to mp3 audio
-def youtube_to_wav(link, output_format='mp3'):
+def youtube_to_audio(link, output_format='mp3'):
 
     file_path = YouTube(link).streams.filter(file_extension='mp4', only_video=False).first().download()
     out_file_name = file_path.split('/')[-1].replace('mp4',
@@ -18,6 +18,9 @@ def youtube_to_wav(link, output_format='mp3'):
                                    format="mp4")
     sound.export('audio/'+out_file_name,
                  format=output_format)
+    out_file_path = 'audio/'+out_file_name
+    
+    return out_file_path
     
     
 # uploads mp3 file to cloud storage
@@ -42,7 +45,7 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     # generation-match precondition using its generation number.
     generation_match_precondition = 0
 
-    blob.upload_from_filename(source_file_name, generation_match_precondition=generation_match_precondition)
+    blob.upload_from_filename(source_file_name, if_generation_match=generation_match_precondition)
 
     print(
         f"File {source_file_name} uploaded to {destination_blob_name}."
@@ -65,7 +68,7 @@ def transcribe_gcs(gcs_uri: str, language_code: str) -> str:
     audio = speech.RecognitionAudio(uri=gcs_uri)
     config = speech.RecognitionConfig(
         sample_rate_hertz=44100,
-        language_code=language_code,
+        language_code=language_code
     )
 
     operation = client.long_running_recognize(config=config, audio=audio)
@@ -92,7 +95,7 @@ def main():
     with open(file, 'r') as f:
         for line in f.readlines():
             link = line
-            youtube_to_wav(link, output_format='mp3')
+            youtube_to_audio(link, output_format='mp3')
     
     for audio_file in os.listdir('audio'):
         

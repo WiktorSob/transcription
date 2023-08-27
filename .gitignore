@@ -3,3 +3,5 @@
 creds.json
 links.txt
 *.mp4
+__pycache__
+.DS_Store
