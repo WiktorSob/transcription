@@ -18,7 +18,7 @@ Snippet below shows simple usage that is a part of the implementation. Firstly, 
 from pytbue import YouTube
 
 YouTube(link).streams.filter(file_extension='mp4',
-							 only_video=False).first().download()
+			     only_video=False).first().download()
 ```
 
 ### Convert video to audio file
