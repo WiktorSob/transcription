@@ -2,7 +2,7 @@ Goal of this project is to create a script for transcribing youtube videos.
 
 ## Background
 
-My girlfriend is writting master's thesis about corpora of politics. Idea is to compare two corpuses - french and polish. In order to utilize NLP tools and methods, the data has to be represented in a textual form. Afer profound research, it turns out that there are very few sources providing transcriptions of political speeches, especially for french and polish language.
+Background for this projects comes from (not mine) idea to compare two politics corpuses - polish and french. In order to utilize NLP tools and methods, the data has to be represented in a textual form. Afer profound research, it turns out that there are very few sources providing transcriptions of political speeches, especially for french and polish language.
 
 As a solution, I've decided to use speech-to-text tools and transcribe selected youtube videos. 
 
