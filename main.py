@@ -1,9 +1,11 @@
 import os
+import shutil
 import argparse
 
 from google.cloud import storage
 from google.cloud import speech
 from google.api_core.exceptions import PreconditionFailed
+from loguru import logger
 
 from utils import youtube_to_audio, upload_blob, transcribe_gcs
 
@@ -17,9 +19,10 @@ def transcribe_link(link, audio_language):
                     source_file_name=audio_file_path,
                     destination_blob_name='input/'+audio_file_name)
     except PreconditionFailed:
-        print('file seems to be already uploaded')
+        logger.info("Audio file seems to be already uploaded to GSC")
     
-    print(f'Transcription of file: {audio_file_name}...')
+    shutil.rmtree(".temp/")
+    logger.info(f"Transcribing file: {audio_file_name}")
     file_uri = BASE_URI+audio_file_name
     transcription = transcribe_gcs(gcs_uri=file_uri,
                                     language_code=audio_language)
