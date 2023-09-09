@@ -1,3 +1,4 @@
+import os
 import argparse
 
 from google.cloud import storage
@@ -6,7 +7,7 @@ from google.api_core.exceptions import PreconditionFailed
 
 from utils import youtube_to_audio, upload_blob, transcribe_gcs
 
-BASE_URI = 'gs://transcription-storage-witek/input/'
+BASE_URI = os.environ["BASE_URI"]
 
 def transcribe_link(link, audio_language):
     audio_file_path = youtube_to_audio(link, output_format='mp3')
