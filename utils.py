@@ -1,27 +1,28 @@
 import os
-from pytube import YouTube
-from pydub import AudioSegment
-from google.cloud import storage
-from google.cloud import speech
+
 from google.api_core.exceptions import PreconditionFailed
+from google.cloud import speech, storage
+from pydub import AudioSegment
+from pytube import YouTube
 
 
 # converts youtube video to mp3 audio
-def youtube_to_audio(link, output_format='mp3'):
+def youtube_to_audio(link, output_format="mp3"):
+    file_path = (
+        YouTube(link)
+        .streams.filter(file_extension="mp4", only_video=False)
+        .first()
+        .download(output_path=".temp")
+    )
+    out_file_name = file_path.split("/")[-1].replace("mp4", output_format)
+    sound = AudioSegment.from_file(file_path, format="mp4")
+    os.makedirs(".temp/audio")
+    sound.export(".temp/audio/" + out_file_name, format=output_format)
+    out_file_path = ".temp/audio/" + out_file_name
 
-    file_path = YouTube(link).streams.filter(file_extension='mp4', only_video=False).first().download(output_path='.temp')
-    out_file_name = file_path.split('/')[-1].replace('mp4',
-                                                    output_format)
-    sound = AudioSegment.from_file(file_path,
-                                   format="mp4")
-    os.makedirs('.temp/audio')
-    sound.export('.temp/audio/'+out_file_name,
-                 format=output_format)
-    out_file_path = '.temp/audio/'+out_file_name
-    
     return out_file_path
-    
-    
+
+
 # uploads mp3 file to cloud storage
 def upload_blob(bucket_name, source_file_name, destination_blob_name):
     """Uploads a file to the bucket."""
@@ -44,13 +45,14 @@ def upload_blob(bucket_name, source_file_name, destination_blob_name):
     # generation-match precondition using its generation number.
     generation_match_precondition = 0
 
-    blob.upload_from_filename(source_file_name, if_generation_match=generation_match_precondition)
-
-    print(
-        f"File {source_file_name} uploaded to {destination_blob_name}."
+    blob.upload_from_filename(
+        source_file_name, if_generation_match=generation_match_precondition
     )
-    
-# async transcription for large files 
+
+    print(f"File {source_file_name} uploaded to {destination_blob_name}.")
+
+
+# async transcription for large files
 def transcribe_gcs(gcs_uri: str, language_code: str) -> str:
     """Asynchronously transcribes the audio file specified by the gcs_uri.
 
@@ -68,7 +70,7 @@ def transcribe_gcs(gcs_uri: str, language_code: str) -> str:
     config = speech.RecognitionConfig(
         sample_rate_hertz=44100,
         language_code=language_code,
-        enable_automatic_punctuation=True
+        enable_automatic_punctuation=True,
     )
 
     operation = client.long_running_recognize(config=config, audio=audio)
@@ -85,4 +87,3 @@ def transcribe_gcs(gcs_uri: str, language_code: str) -> str:
     transcript = "".join(transcript_builder)
 
     return transcript
-    
