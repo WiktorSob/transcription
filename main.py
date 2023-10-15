@@ -9,14 +9,14 @@ from loguru import logger
 from utils import transcribe_gcs, upload_blob, youtube_to_audio
 
 BASE_URI = os.environ["BASE_URI"]
-
+STORAGE_NAME = os.environ["STORAGE_NAME"]
 
 def transcribe_link(link, audio_language):
     audio_file_path = youtube_to_audio(link, output_format="mp3")
     audio_file_name = audio_file_path.split("/")[-1]
     try:
         upload_blob(
-            bucket_name="transcription-storage-witek",
+            bucket_name=STORAGE_NAME,
             source_file_name=audio_file_path,
             destination_blob_name="input/" + audio_file_name,
         )
