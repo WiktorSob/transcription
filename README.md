@@ -66,6 +66,8 @@ def print_result(result: speech.SpeechRecognitionResult):
 ```
 ## Usage
 
+To run this, you need to create new GCP project and enable speech-to-text API. Other than that, you need to set up a stoage bucket and provide a URI to it and its name as env variables. AFter succesful authorization, you should be able to run the transcription job. 
+
 For now, files can be transcribed in batches. You can select text file with links to youtube videos and specify transcription language code ([BCP 47 codes](https://www.techonthenet.com/js/language_tags.php)):
 
 ```python
